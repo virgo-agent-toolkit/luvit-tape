@@ -1,5 +1,5 @@
 local tape = require('..')
-local DumpingWritter = require('./dumping_writter').DumpingWritter
+local DumpingWriter = require('./dumping_writer').DumpingWriter
 
 local runner = tape.TestRunner:new()
 
@@ -9,6 +9,6 @@ runner:test("test 1", function(t, cb)
   cb()
 end)
 
-runner:pipe(DumpingWritter:new())
+runner:pipe(DumpingWriter:new())
 
 runner:go()
