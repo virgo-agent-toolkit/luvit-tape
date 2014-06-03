@@ -3,15 +3,15 @@ local stream = require('../modules/stream')
 
 local Test = require('./test').Test
 
-local TapTransform = stream.Transform:extend()
+local TapProducer = stream.Transform:extend()
 
-function TapTransform:initialize()
+function TapProducer:initialize()
   stream.Transform.initialize(self, {objectMode = true})
 
   self.versionPrinted = false
 end
 
-function TapTransform:_transform(data, encoding, callback)
+function TapProducer:_transform(data, encoding, callback)
 
   if data == nil then
     callback(nil, nil)
@@ -41,6 +41,6 @@ end
 
 local exports = {}
 
-exports.TapTransform = TapTransform
+exports.TapProducer = TapProducer
 
 return exports

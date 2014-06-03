@@ -1,7 +1,11 @@
 local table = require('table')
+local io = require('io')
+
+local Writable = require('stream').Writable
 
 local TestSuite = require('./lib/test_suite').TestSuite
-local TapTransform = require('./lib/tap_transform').TapTransform
+local TapProducer = require('./lib/tap_producer').TapProducer
+local TestRunner = require('./lib/test_runner').TestRunner
 
 local last = nil
 local first = nil
@@ -25,13 +29,23 @@ function test(test_suite_name)
   end
 end
 
+local stdout = Writable:extend()
+
+function stdout:_write(data, encoding, callback)
+  if data then
+    io.write(data)
+  end
+  callback()
+end
+
 function trigger()
   local current = first
   local count = 1
   function go()
     if current then
-      current:pipe(TapTransform:new()):pipe(process.stdout)
-      current:go(go)
+      local producer = TapProducer:new()
+      producer:once('end', go)
+      current:pipe(TestRunner:new()):pipe(producer):pipe(stdout:new())
       current = current.nextSuite
     end
   end

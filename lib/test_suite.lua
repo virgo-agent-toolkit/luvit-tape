@@ -6,45 +6,31 @@ local table = require('table')
 local TestSuite = stream.Readable:extend()
 
 function TestSuite:initialize(suite_name)
-  stream.Readable.initialize(self, {objectMode = true})
-
+  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 1024})
   self.suite_name = suite_name
-
   self.currentTestID = 1
-
-  self.ready = {}
-  self.done = {}
-
-  self.streamRequested = false
-
-  self.running = false
+  self.tests = {}
+  self.read_called = false
 end
 
 function TestSuite:_read(n)
-  self.streamRequested = false
+  self.read_called = true
   for i = 1,n,1 do
-    if table.getn(self.done) ~= 0 then
-      self:push(table.remove(self.done, 1))
+    if table.getn(self.tests) ~= 0 then
+      self:push(table.remove(self.tests, 1))
     else
-      -- we don't have data yet but we'll push it out whenever next one is
-      -- available.
-      self.streamRequested = true
-      break
+      self:push(nil)
     end
-  end
-
-  if table.getn(self.done) == 0 and table.getn(self.ready) == 0 then
-    self:push(nil)
   end
 end
 
-function TestSuite:test(name, conf, cb)
-  if running then
-    error(':test() should be called only before :go()')
+function TestSuite:test(name, conf, func)
+  if self.read_called then
+    debug('warning: test() called after _read() is called.')
   end
 
   if type(conf) == 'function' then
-    cb = conf
+    func = conf
     conf = nil
   end
   if type(name) == 'object' then
@@ -52,43 +38,17 @@ function TestSuite:test(name, conf, cb)
     name = nil
   end
   if type(name) == 'function' then
-    cb = name
+    func = name
     name = nil
   end
 
   if not conf then conf = {} end
   if not name then name = '' end
 
-  table.insert(self.ready, function()
-    local t = Test:new(name, conf)
-    t.id = self.currentTestID
-    self.currentTestID = self.currentTestID + 1
-    t.finish = function()
-      if self.streamRequested then
-        -- a stream consumer asked for data. we push it out without adding it
-        -- into done table
-        self:push(t)
-      else
-        table.insert(self.done, t)
-      end
-      table.remove(self.ready, 1)
-      if table.getn(self.ready) > 0 then
-        process.nextTick(self.ready[1])
-      else
-        process.nextTick(self.finish_cb)
-      end
-    end
-    cb(t)
-  end)
-end
-
-function TestSuite:go(cb)
-  if not running then
-    self.finish_cb = cb
-    if table.getn(self.ready) > 0 then
-      process.nextTick(self.ready[1])
-    end
-  end
+  local t = Test:new(name, conf, func)
+  t.id = self.currentTestID
+  self.currentTestID = self.currentTestID + 1
+  table.insert(self.tests, t)
 end
 
 local exports = {}
