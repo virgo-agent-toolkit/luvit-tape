@@ -13,10 +13,6 @@ function Test:initialize(name, conf)
   self.finished = false
 end
 
-function Test:finish()
-  self.finished = true
-end
-
 function Test:is_number(a, message)
   if self.finished or not self.ok then
     return
