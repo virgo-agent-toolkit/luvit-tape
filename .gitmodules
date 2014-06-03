@@ -1,6 +1,3 @@
-[submodule "lib/modules"]
-	path = lib/modules/stream
-	url = git@github.com:virgo-agent-toolkit/luvit-stream.git
-[submodule "lib/modules/stream"]
-	path = lib/modules/stream
-	url = git@github.com:virgo-agent-toolkit/luvit-stream.git
+[submodule "modules/stream"]
+	path = modules/stream
+	url = https://github.com/virgo-agent-toolkit/luvit-stream.git

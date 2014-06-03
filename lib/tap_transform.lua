@@ -1,5 +1,5 @@
 local core = require('core')
-local stream = require('stream')
+local stream = require('../modules/stream')
 
 local Test = require('./test').Test
 

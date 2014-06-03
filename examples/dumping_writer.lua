@@ -1,4 +1,4 @@
-local stream = require('../lib/modules/stream')
+local stream = require('../modules/stream')
 local json = require('json')
 
 local DumpingWriter = stream.Writable:extend()

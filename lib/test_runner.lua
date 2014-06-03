@@ -1,6 +1,6 @@
 local core = require('core')
 local Test = require('./test').Test
-local stream = require('stream')
+local stream = require('../modules/stream')
 local table = require('table')
 
 local TestRunner = stream.Readable:extend()
