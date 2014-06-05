@@ -15,7 +15,7 @@ end
 
 function TestSuite:_read(n)
   self.read_called = true
-  for i = 1,n,1 do
+  for i = 1,n do
     if table.getn(self.tests) ~= 0 then
       self:push(table.remove(self.tests, 1))
     else

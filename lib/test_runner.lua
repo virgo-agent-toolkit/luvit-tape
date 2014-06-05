@@ -13,7 +13,7 @@ function TestRunner:_transform(t, encoding, callback)
     end
     t.func(t)
   else
-    callback(nil, nil)
+    callback()
   end
 end
 
