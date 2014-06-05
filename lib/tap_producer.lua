@@ -14,7 +14,7 @@ end
 function TapProducer:_transform(data, encoding, callback)
 
   if data == nil then
-    callback(nil, nil)
+    callback()
   end
 
   if not core.instanceof(data, Test) then

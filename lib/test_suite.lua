@@ -20,6 +20,7 @@ function TestSuite:_read(n)
       self:push(table.remove(self.tests, 1))
     else
       self:push(nil)
+      break
     end
   end
 end
