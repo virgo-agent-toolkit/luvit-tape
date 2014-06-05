@@ -30,7 +30,7 @@ function Test:equal(expected, got, message)
     return
   end
 
-  function _equal(a, b)
+  local _equal = function(a, b)
     if a == b then
       return true
     end
