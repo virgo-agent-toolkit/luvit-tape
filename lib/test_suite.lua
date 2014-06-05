@@ -29,19 +29,6 @@ function TestSuite:test(name, conf, func)
     debug('warning: test() called after _read() is called.')
   end
 
-  if type(conf) == 'function' then
-    func = conf
-    conf = nil
-  end
-  if type(name) == 'object' then
-    conf = name
-    name = nil
-  end
-  if type(name) == 'function' then
-    func = name
-    name = nil
-  end
-
   if not conf then conf = {} end
   if not name then name = '' end
 

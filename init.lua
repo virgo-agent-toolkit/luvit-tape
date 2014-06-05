@@ -20,12 +20,12 @@ function test(test_suite_name)
     last.next_suite = suite
   end
   last = suite
-  return function(test_name, callback)
+  return function(test_name, conf, func)
     if not triggered then
       process.nextTick(trigger)
       triggered = true
     end
-    suite:test(test_name, callback)
+    suite:test(test_name, conf, func)
   end
 end
 
