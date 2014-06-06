@@ -1,4 +1,7 @@
+local core = require('core')
+
 local Transform = require('../modules/stream').Transform
+local Test = require('./test').Test
 
 local TestRunner = Transform:extend()
 
@@ -8,6 +11,9 @@ end
 
 function TestRunner:_transform(t, encoding, callback)
   if t then
+    if not core.instanceof(t, Test) then
+      error('invalide data; should be a Test instance')
+    end
     t.finish = function()
       callback(nil, t)
     end
