@@ -36,7 +36,7 @@ function trigger()
     if current then
       local producer = TapProducer:new()
       producer:once('end', go)
-      current:pipe(TestRunner:new(), {_end = true}):pipe(producer, {_end = true}):pipe(process.stdout)
+      current:pipe(TestRunner:new()):pipe(producer):pipe(process.stdout)
       current = current.next_suite
     end
   end
