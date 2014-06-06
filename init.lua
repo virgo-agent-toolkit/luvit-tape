@@ -29,15 +29,6 @@ function test(test_suite_name)
   end
 end
 
-local stdout = Writable:extend()
-
-function stdout:_write(data, encoding, callback)
-  if data then
-    io.write(data)
-  end
-  callback()
-end
-
 function trigger()
   local current = first
   local count = 1
@@ -45,7 +36,7 @@ function trigger()
     if current then
       local producer = TapProducer:new()
       producer:once('end', go)
-      current:pipe(TestRunner:new(), {_end = true}):pipe(producer, {_end = true}):pipe(stdout:new())
+      current:pipe(TestRunner:new(), {_end = true}):pipe(producer, {_end = true}):pipe(process.stdout)
       current = current.next_suite
     end
   end
