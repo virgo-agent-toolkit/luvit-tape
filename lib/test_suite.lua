@@ -36,7 +36,9 @@ function TestSuite:test(name, conf, func)
   local t = Test:new(name, conf, func)
   t.id = self.currentTestID
   self.currentTestID = self.currentTestID + 1
-  table.insert(self.tests, t)
+  if not self:push(t) then -- highWaterMark is hit; buffer in local table
+    table.insert(self.tests, t)
+  end
 end
 
 local exports = {}
