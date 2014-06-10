@@ -1,47 +1,16 @@
-local table = require('table')
-local io = require('io')
+local TestSuites = require('./lib/test_suites.lua').TestSuites
+local TestSuitesRunner = require('./lib/test_suites.lua').TestSuitesRunner
 
-local Writable = require('stream').Writable
+local suites = TestSuites:new()
 
-local TestSuite = require('./lib/test_suite').TestSuite
-local TapProducer = require('./lib/tap_producer').TapProducer
-local TestRunner = require('./lib/test_runner').TestRunner
 
-local last = nil
-local first = nil
-local triggered = false
+process.nextTick(function()
+  suites:pipe(TestSuitesRunner:new())
+end)
 
-function test(test_suite_name)
-  local suite = TestSuite:new(test_suite_name)
-  if first == nil then
-    first = suite
-  end
-  if last ~= nil then
-    last.next_suite = suite
-  end
-  last = suite
+return function(test_suite_name)
+  local suite = suites:new_suite(test_suite_name)
   return function(test_name, conf, func)
-    if not triggered then
-      process.nextTick(trigger)
-      triggered = true
-    end
     suite:test(test_name, conf, func)
   end
 end
-
-function trigger()
-  local current = first
-  local count = 1
-  local go
-  go = function()
-    if current then
-      local producer = TapProducer:new()
-      producer:once('end', go)
-      current:pipe(TestRunner:new()):pipe(producer):pipe(process.stdout)
-      current = current.next_suite
-    end
-  end
-  go()
-end
-
-return test

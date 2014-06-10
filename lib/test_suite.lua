@@ -9,7 +9,7 @@ function TestSuite:initialize(suite_name)
   stream.Readable.initialize(self, {objectMode = true, highWaterMark = 1024})
   self.suite_name = suite_name
   self.currentTestID = 1
-  self.tests = {}
+  self.tests = {} -- in case highWaterMark is hit
   self.read_called = false
 end
 
