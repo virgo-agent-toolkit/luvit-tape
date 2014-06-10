@@ -51,39 +51,101 @@ function Test:finish()
   self:_finish()
 end
 
-function Test:is_number(a, message)
+function Test:_assert(cb)
   if self.finished or not self.ok then
     return
   end
 
-  if type(a) ~= 'number' then
-    self.ok = false
-    self.result:message(message):severity('fail'):got(a):expected('a number')
-  end
+  cb()
+end
+
+function Test:is_nil(a, message)
+  self:_assert(function()
+    if a ~= nil then
+      self.ok = false
+      self.result:message(message):severity('fail'):got(a):expected(nil)
+    end
+  end)
+end
+
+function Test:not_nil(a, message)
+  self:_assert(function()
+    if a == nil then
+      self.ok = false
+      self.result:message(message):severity('fail'):got(a):expected(nil)
+    end
+  end)
+end
+
+function Test:is_x(x, a, message)
+  self:_assert(function()
+    if type(a) ~= x then
+      self.ok = false
+      self.result:message(message):severity('fail'):got(a):expected('a ' .. x)
+    end
+  end)
+end
+
+function Test:is_number(a, message)
+  self:is_x('number', a, message)
+end
+
+function Test:is_string(a, message)
+  self:is_x('string', a, message)
+end
+
+function Test:is_boolean(a, message)
+  self:is_x('boolean', a, message)
+end
+
+function Test:is_table(a, message)
+  self:is_x('table', a, message)
+end
+
+function Test:is_array(a, message)
+  self:_assert(function()
+    local nope = function()
+      self.ok = false
+      self.result:message(message):severity('fail'):got(a):expected('a ' .. x)
+    end
+
+    if type(a) ~= 'table' then
+      nope()
+      return
+    end
+
+    local is_array = true
+    local i = 1
+    for k,v in pairs(a) do
+      if not (k == i) then
+        is_array = false
+        nope()
+        return
+      end
+      i = i + 1
+    end
+  end)
 end
 
 function Test:equal(expected, got, message)
-  if self.finished or not self.ok then
-    return
-  end
+  self:_assert(function()
+    local _equal = function(a, b)
+      if a == b then
+        return true
+      end
 
-  local _equal = function(a, b)
-    if a == b then
-      return true
+      if type(a) == 'table' and type(b) == 'table' then
+        -- todo
+      end
+
+      return false
     end
 
-    if type(a) == 'table' and type(b) == 'table' then
-      -- todo
+    if not _equal(expected, got) then
+      self.ok = false
+      self.result:message(message):severity('fail'):got(b):expected(a)
     end
-
-    return false
-  end
-
-  if not _equal(expected, got) then
-    self.ok = false
-    self.result:message(message):severity('fail'):got(b):expected(a)
-  end
-
+  end)
 end
 
 local exports = {}
