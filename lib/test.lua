@@ -12,6 +12,37 @@ function Test:initialize(name, conf, func)
   self.result = TestResult:new()
   self.ok = true
   self.finished = false
+
+  self.directives = {}
+  self.directives['skip'] = { skipped = false, reason = "" }
+  self.directives['todo'] = { is_todo = false, explanation = "" }
+end
+
+function Test:todo(explanation)
+  -- no matter it's finished/ok or not, TODO directive should be shown.
+  -- TODO directive is not show if the test has been skipped
+  if not self.directives['skip'].skipped then
+    self.directives['todo'].is_todo = true
+    self.directives['todo'].explanation = explanation
+    self.ok = false -- TODO tests are considered failed
+    self:finish()
+  end
+end
+
+function Test:skip(reason)
+  if self.finished or not self.ok then
+    return
+  end
+  self.directives['skip'].skipped = true
+  self.directives['skip'].reason = reason
+  self:finish()
+end
+
+function Test:finish()
+  if not self.finished then
+    self.finished = true
+    self:_finish()
+  end
 end
 
 function Test:is_number(a, message)

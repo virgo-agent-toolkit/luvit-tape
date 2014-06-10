@@ -29,10 +29,22 @@ function TapProducer:_transform(data, encoding, callback)
   end
 
   if data.ok then
-    tap = tap .. 'ok ' .. tostring(data.id) .. ' ' .. data.name .. '\n'
+    tap = tap .. 'ok '
   else
-    tap = tap .. 'not ok ' .. tostring(data.id) .. ' ' .. data.name .. '\n'
+    tap = tap .. 'not ok '
   end
+
+  tap = tap .. tostring(data.id) .. ' ' .. data.name
+
+  if data.directives['skip'].skipped then
+    tap = tap .. ' # skip ' .. data.directives['skip'].reason
+  end
+
+  if data.directives['todo'].is_todo then
+    tap = tap .. ' # TODO ' .. data.directives['todo'].explanation
+  end
+
+  tap = tap .. '\n'
 
   -- TODO: yaml encoding details
 
