@@ -20,29 +20,35 @@ end
 
 function Test:todo(explanation)
   -- no matter it's finished/ok or not, TODO directive should be shown.
+
   -- TODO directive is not show if the test has been skipped
-  if not self.directives['skip'].skipped then
-    self.directives['todo'].is_todo = true
-    self.directives['todo'].explanation = explanation
-    self.ok = false -- TODO tests are considered failed
-    self:finish()
+  if self.directives['skip'].skipped then
+    return
   end
+
+  self.directives['todo'].is_todo = true
+  self.directives['todo'].explanation = explanation
+  self.ok = false -- TODO tests are considered failed
+  self:finish()
 end
 
 function Test:skip(reason)
   if self.finished or not self.ok then
     return
   end
+
   self.directives['skip'].skipped = true
   self.directives['skip'].reason = reason
   self:finish()
 end
 
 function Test:finish()
-  if not self.finished then
-    self.finished = true
-    self:_finish()
+  if self.finished then
+    return
   end
+
+  self.finished = true
+  self:_finish()
 end
 
 function Test:is_number(a, message)
