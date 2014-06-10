@@ -17,7 +17,7 @@ function TestRunner:_transform(t, encoding, callback)
     t._finish = function()
       callback(nil, t)
     end
-    t.func(t)
+    t:func()
   else
     callback()
   end

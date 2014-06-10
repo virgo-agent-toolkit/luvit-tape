@@ -13,15 +13,16 @@ local TestSuites = stream.Readable:extend()
 function TestSuites:initialize()
   stream.Readable.initialize(self, {objectMode = true, highWaterMark = 1024})
 
-  self.test_suites = {} -- in case highWaterMark is hit
+  self.test_suites_buf = {} -- in case highWaterMark is hit
+  self.suites = {}
   self.read_called = false
 end
 
 function TestSuites:_read(n)
   self.read_called = true
   for i = 1,n do
-    if table.getn(self.test_suites) ~= 0 then
-      self:push(table.remove(self.test_suites, 1))
+    if table.getn(self.test_suites_buf) ~= 0 then
+      self:push(table.remove(self.test_suites_buf, 1))
     else
       self:push(nil)
       break
@@ -29,16 +30,19 @@ function TestSuites:_read(n)
   end
 end
 
-function TestSuites:new_suite(test_suite_name)
+function TestSuites:get_or_create_suite(test_suite_name)
   if self.read_called then
-    debug('warning: test() called after _read() is called.')
+    debug('warning: get_or_create_suite() called after _read() is called.')
   end
 
-  local suite = TestSuite:new(test_suite_name)
-  if not self:push(suite) then
-    table.insert(self.test_suites, suite)
+  if self.suites[test_suite_name] == nil then
+    local suite = TestSuite:new(test_suite_name)
+    if not self:push(suite) then
+      table.insert(self.test_suites_buf, suite)
+    end
+    self.suites[test_suite_name] = suite
   end
-  return suite
+  return self.suites[test_suite_name]
 end
 
 
@@ -57,9 +61,7 @@ function TestSuitesRunner:_write(data, encoding, callback)
   end
 
   local producer = TapProducer:new()
-  producer:once('end', function()
-    callback()
-  end)
+  producer:once('end', callback)
   data:pipe(TestRunner:new()):pipe(producer):pipe(process.stdout)
 end
 
