@@ -32,7 +32,8 @@ end
 function trigger()
   local current = first
   local count = 1
-  function go()
+  local go
+  go = function()
     if current then
       local producer = TapProducer:new()
       producer:once('end', go)
