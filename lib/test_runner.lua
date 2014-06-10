@@ -12,7 +12,7 @@ end
 function TestRunner:_transform(t, encoding, callback)
   if t then
     if not core.instanceof(t, Test) then
-      error('invalide data; should be a Test instance')
+      error('invalid data; should be a Test instance')
     end
     t._finish = function()
       callback(nil, t)

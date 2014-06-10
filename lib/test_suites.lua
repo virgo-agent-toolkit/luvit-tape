@@ -11,23 +11,16 @@ local TestRunner = require('./test_runner').TestRunner
 local TestSuites = stream.Readable:extend()
 
 function TestSuites:initialize()
-  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 1024})
+  -- hwm is set to the maximum number that fits in signed 32-bit number.
+  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0xEFFFFFFF})
 
-  self.test_suites_buf = {} -- in case highWaterMark is hit
   self.suites = {}
   self.read_called = false
 end
 
 function TestSuites:_read(n)
   self.read_called = true
-  for i = 1,n do
-    if table.getn(self.test_suites_buf) ~= 0 then
-      self:push(table.remove(self.test_suites_buf, 1))
-    else
-      self:push(nil)
-      break
-    end
-  end
+  self:push(nil)
 end
 
 function TestSuites:get_or_create_suite(test_suite_name)
@@ -37,9 +30,7 @@ function TestSuites:get_or_create_suite(test_suite_name)
 
   if self.suites[test_suite_name] == nil then
     local suite = TestSuite:new(test_suite_name)
-    if not self:push(suite) then
-      table.insert(self.test_suites_buf, suite)
-    end
+    self:push(suite)
     self.suites[test_suite_name] = suite
   end
   return self.suites[test_suite_name]

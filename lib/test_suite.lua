@@ -6,23 +6,16 @@ local table = require('table')
 local TestSuite = stream.Readable:extend()
 
 function TestSuite:initialize(suite_name)
-  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 1024})
+  -- hwm is set to the maximum number that fits in signed 32-bit number.
+  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0xEFFFFFFF})
   self.suite_name = suite_name
   self.currentTestID = 1
-  self.tests = {} -- in case highWaterMark is hit
   self.read_called = false
 end
 
 function TestSuite:_read(n)
   self.read_called = true
-  for i = 1,n do
-    if table.getn(self.tests) ~= 0 then
-      self:push(table.remove(self.tests, 1))
-    else
-      self:push(nil)
-      break
-    end
-  end
+  self:push(nil)
 end
 
 function TestSuite:test(name, conf, func)
@@ -36,9 +29,7 @@ function TestSuite:test(name, conf, func)
   local t = Test:new(name, conf, func)
   t.id = self.currentTestID
   self.currentTestID = self.currentTestID + 1
-  if not self:push(t) then -- highWaterMark is hit; buffer in local table
-    table.insert(self.tests, t)
-  end
+  self:push(t)
 end
 
 local exports = {}

@@ -17,7 +17,7 @@ function JSONDumper:_transform(data, encoding, callback)
   end
 
   if not core.instanceof(data, Test) then
-    error('invalide data; should be a Test instance')
+    error('invalid data; should be a Test instance')
   end
 
   local toDump = {}
