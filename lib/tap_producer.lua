@@ -6,7 +6,7 @@ local Test = require('./test').Test
 local TapProducer = stream.Transform:extend()
 
 function TapProducer:initialize()
-  stream.Transform.initialize(self, {objectMode = true})
+  stream.Transform.initialize(self, {objectMode = false, writableObjectMode = true})
 
   self.versionPrinted = false
 end
