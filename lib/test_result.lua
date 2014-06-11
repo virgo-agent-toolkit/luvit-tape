@@ -46,8 +46,4 @@ function TestResult:expected(expected)
   end
 end
 
-local exports = {}
-
-exports.TestResult = TestResult
-
-return exports
+return TestResult

@@ -1,7 +1,10 @@
 local core = require('core')
-local Test = require('./test').Test
 local stream = require('../modules/stream')
 local table = require('table')
+
+local Test = require('./test')
+local Runner = require('./runner')
+local TapProducer = require('./tap_producer')
 
 local TestSuite = stream.Readable:extend()
 
@@ -32,8 +35,12 @@ function TestSuite:test(name, conf, func)
   self:push(t)
 end
 
-local exports = {}
+function TestSuite:run()
+  local producer = TapProducer:new()
+  producer:once('end', function()
+  self._finish()
+  end)
+  self:pipe(Runner:new()):pipe(producer):pipe(process.stdout)
+end
 
-exports.TestSuite = TestSuite
-
-return exports
+return TestSuite

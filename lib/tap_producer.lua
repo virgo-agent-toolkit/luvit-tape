@@ -1,7 +1,7 @@
 local core = require('core')
 local stream = require('../modules/stream')
 
-local Test = require('./test').Test
+local Test = require('./test')
 
 local TapProducer = stream.Transform:extend()
 
@@ -51,8 +51,4 @@ function TapProducer:_transform(data, encoding, callback)
   callback(nil, tap)
 end
 
-local exports = {}
-
-exports.TapProducer = TapProducer
-
-return exports
+return TapProducer
