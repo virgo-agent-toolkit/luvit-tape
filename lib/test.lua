@@ -128,22 +128,51 @@ function Test:is_array(a, message)
 end
 
 function Test:equal(expected, got, message)
-  self:_assert(function()
-    local _equal = function(a, b)
-      if a == b then
-        return true
-      end
-
-      if type(a) == 'table' and type(b) == 'table' then
-        -- todo
-      end
-
-      return false
+  local _equal
+  _equal = function(a, b)
+    if a == b then
+      -- same value or same reference
+      return true
     end
 
+    if type(a) == 'table' and type(b) == 'table' then
+      local keys = {}
+      local count = 0
+      for k,v in pairs(a) do
+        keys[k] = true
+        count = count + 1
+      end
+      for k,v in pairs(b) do
+        if not keys[k] then
+          -- b has a key not in a
+          return false
+        end
+        count = count - 1
+      end
+
+      if count ~= 0 then
+        -- b has less keys than a
+        return false
+      end
+
+      -- a and b have same keys set. deep compare them
+      for k,v in pairs(keys) do
+        if not _equal(a[k], b[k]) then
+          return false
+        end
+      end
+
+      return true
+    end
+
+
+    return false
+  end
+
+  self:_assert(function()
     if not _equal(expected, got) then
       self.ok = false
-      self.result:message(message):severity('fail'):got(b):expected(a)
+      self.result:message(message):severity('fail'):got(got):expected(expected)
     end
   end)
 end
