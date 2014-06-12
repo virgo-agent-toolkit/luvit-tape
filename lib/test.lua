@@ -1,5 +1,6 @@
 local core = require('core')
 local TestResult = require('./test_result').TestResult
+local stats = require('./stats')
 
 local Test = core.Object:extend()
 
@@ -48,6 +49,9 @@ function Test:finish()
   end
 
   self.finished = true
+  if not self.ok then
+    stats.failedTests = stats.failedTests + 1
+  end
   self:_finish()
 end
 
