@@ -67,7 +67,7 @@ function Test:is_nil(a, message)
   self:_assert(function()
     if a ~= nil then
       self.ok = false
-      self.result:message(message):severity('fail'):got(a):expected(nil)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected(nil)
     end
   end)
 end
@@ -76,7 +76,7 @@ function Test:not_nil(a, message)
   self:_assert(function()
     if a == nil then
       self.ok = false
-      self.result:message(message):severity('fail'):got(a):expected(nil)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected(nil)
     end
   end)
 end
@@ -85,7 +85,7 @@ function Test:is_x(x, a, message)
   self:_assert(function()
     if type(a) ~= x then
       self.ok = false
-      self.result:message(message):severity('fail'):got(a):expected('a ' .. x)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected('a ' .. x)
     end
   end)
 end
@@ -110,7 +110,7 @@ function Test:is_array(a, message)
   self:_assert(function()
     local nope = function()
       self.ok = false
-      self.result:message(message):severity('fail'):got(a):expected('a ' .. x)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected('a ' .. x)
     end
 
     if type(a) ~= 'table' then
@@ -176,7 +176,7 @@ function Test:equal(expected, got, message)
   self:_assert(function()
     if not _equal(expected, got) then
       self.ok = false
-      self.result:message(message):severity('fail'):got(got):expected(expected)
+      self.result:set_message(message):set_severity('fail'):set_got(got):set_expected(expected)
     end
   end)
 end

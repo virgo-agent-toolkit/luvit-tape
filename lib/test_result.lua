@@ -2,48 +2,36 @@ local core = require('core')
 
 local TestResult = core.Object:extend()
 
--- get or set the message
--- message (optional): string
-function TestResult:message(message)
-  if message == nil then
-    return self._message
-  else
-    self._message = message
-    return self
-  end
+function TestResult:message()
+  return self._message
+end
+function TestResult:set_message(message)
+  self._message = message
+  return self
 end
 
--- get or set the severity
--- severity (optional): string
-function TestResult:severity(severity)
-  if severity == nil then
-    return self._severity
-  else
-    self._severity = severity
-    return self
-  end
+function TestResult:severity()
+  return self._severity
+end
+function TestResult:set_severity(severity)
+  self._severity = severity
+  return self
 end
 
--- get or set the data got
--- severity (optional): anything
-function TestResult:got(got)
-  if got == nil then
-    return self._got
-  else
-    self._got = got
-    return self
-  end
+function TestResult:got()
+  return self._got
+end
+function TestResult:set_got(got)
+  self._got = got
+  return self
 end
 
--- get or set the data expected
--- expected (optional): anything
-function TestResult:expected(expected)
-  if expected == nil then
-    return self._expected
-  else
-    self._expected = expected
-    return self
-  end
+function TestResult:expected()
+  return self._expected
+end
+function TestResult:set_expected(expected)
+  self._expected = expected
+  return self
 end
 
 local exports = {}
