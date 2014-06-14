@@ -10,7 +10,7 @@ local TestSuites = stream.Readable:extend()
 
 function TestSuites:initialize()
   -- hwm is set to the maximum number that fits in signed 32-bit number.
-  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0xEFFFFFFF})
+  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0x800000})
 
   self.suites = {}
   self.read_called = false

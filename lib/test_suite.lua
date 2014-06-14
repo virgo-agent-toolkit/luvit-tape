@@ -10,7 +10,7 @@ local TestSuite = stream.Readable:extend()
 
 function TestSuite:initialize(suite_name)
   -- hwm is set to the maximum number that fits in signed 32-bit number.
-  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0xEFFFFFFF})
+  stream.Readable.initialize(self, {objectMode = true, highWaterMark = 0x800000})
   self.suite_name = suite_name
   self.currentTestID = 1
   self.read_called = false
@@ -38,6 +38,7 @@ end
 function TestSuite:run()
   local producer = TapProducer:new()
   producer:once('end', function()
+  print('end emitted')
   self._finish()
   end)
   self:pipe(Runner:new()):pipe(producer):pipe(process.stdout)
