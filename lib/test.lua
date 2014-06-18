@@ -132,8 +132,7 @@ function Test:is_array(a, message)
 end
 
 function Test:equal(expected, got, message)
-  local _equal
-  _equal = function(a, b)
+  local function _equal(a, b)
     if a == b then
       -- same value or same reference
       return true
@@ -168,7 +167,6 @@ function Test:equal(expected, got, message)
 
       return true
     end
-
 
     return false
   end
