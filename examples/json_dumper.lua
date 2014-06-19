@@ -2,7 +2,7 @@ local core = require('core')
 local json = require('json')
 
 local stream = require('../modules/stream')
-local Test = require('../lib/test').Test
+local Test = require('../lib/test')
 
 local JSONDumper = stream.Transform:extend()
 
@@ -29,8 +29,4 @@ function JSONDumper:_transform(data, encoding, callback)
   callback(nil, json.stringify(toDump) .. '\n')
 end
 
-local exports = {}
-
-exports.JSONDumper = JSONDumper
-
-return exports
+return JSONDumper

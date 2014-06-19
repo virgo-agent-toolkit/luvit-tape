@@ -1,6 +1,6 @@
-local TestSuite = require('../lib/test_suite').TestSuite
-local TestRunner = require('../lib/test_runner').TestRunner
-local JSONDumper = require('./json_dumper').JSONDumper
+local TestSuite = require('../lib/test_suite')
+local Runner = require('../lib/runner')
+local JSONDumper = require('./json_dumper')
 
 local suite = TestSuite:new()
 
@@ -16,4 +16,4 @@ suite:test("My super awesome test", nil, function(t)
   t:finish()
 end)
 
-suite:pipe(TestRunner:new()):pipe(JSONDumper:new()):pipe(process.stdout)
+suite:pipe(Runner:new()):pipe(JSONDumper:new()):pipe(process.stdout)

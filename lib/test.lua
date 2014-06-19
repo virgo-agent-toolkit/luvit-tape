@@ -1,5 +1,5 @@
 local core = require('core')
-local TestResult = require('./test_result').TestResult
+local TestResult = require('./test_result')
 local stats = require('./stats')
 
 local Test = core.Object:extend()
@@ -7,7 +7,7 @@ local Test = core.Object:extend()
 function Test:initialize(name, conf, func)
   self.name = name
   self.conf = conf
-  self.func = func
+  self.run = func
 
   self.id = 0
   self.result = TestResult:new()
@@ -179,8 +179,4 @@ function Test:equal(expected, got, message)
   end)
 end
 
-local exports = {}
-
-exports.Test = Test
-
-return exports
+return Test

@@ -34,8 +34,4 @@ function TestResult:set_expected(expected)
   return self
 end
 
-local exports = {}
-
-exports.TestResult = TestResult
-
-return exports
+return TestResult
