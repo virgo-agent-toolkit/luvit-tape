@@ -38,7 +38,6 @@ end
 function TestSuite:run()
   local producer = TapProducer:new()
   producer:once('end', function()
-  print('end emitted')
   self._finish()
   end)
   self:pipe(Runner:new()):pipe(producer):pipe(process.stdout)
