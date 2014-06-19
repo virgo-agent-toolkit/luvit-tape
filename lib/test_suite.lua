@@ -37,9 +37,7 @@ end
 
 function TestSuite:run()
   local producer = TapProducer:new()
-  producer:once('end', function()
-  self._finish()
-  end)
+  producer:once('end', self._finish)
   self:pipe(Runner:new()):pipe(producer):pipe(process.stdout)
 end
 

@@ -76,7 +76,7 @@ function Test:not_nil(a, message)
   self:_assert(function()
     if a == nil then
       self.ok = false
-      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected(nil)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected("not nil")
     end
   end)
 end
