@@ -7,10 +7,8 @@ local suites = TestSuites:new()
 
 -- reflect number of failed tests aggregated from all test suites in exit code.
 process:on('exit', function(exit_code)
-  if stats.failedTests > 255 then
-    process.exit(255)
-  else
-    process.exit(stats.failedTests)
+  if stats.failedTests ~= 0 then
+    process.exit(1)
   end
 end)
 
