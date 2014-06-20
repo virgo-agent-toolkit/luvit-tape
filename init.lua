@@ -1,18 +1,8 @@
 local TestSuites = require('./lib/test_suites.lua')
 local Runner = require('./lib/runner')
 local utils = require('utils')
-local stats = require('./lib/stats')
 
 local suites = TestSuites:new()
-
---[[
--- reflect number of failed tests aggregated from all test suites in exit code.
-process:on('exit', function(exit_code)
-  if stats.failedTests ~= 0 then
-    process.exit(1)
-  end
-end)
-]]
 
 -- Test suites are triggered in the next tick
 process.nextTick(function()

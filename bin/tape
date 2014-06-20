@@ -1,0 +1,16 @@
+#!/usr/bin/env luvit
+
+local string = require('string')
+local path = require('path')
+
+local stats = require('../lib/stats')
+
+for i = 1,#process.argv do
+  require(path.resolve(process.cwd(), process.argv[i]))
+end
+
+process:once('exit', function(exit_code)
+  if stats.failedTests ~= 0 then
+    process.exit(1)
+  end
+end)
