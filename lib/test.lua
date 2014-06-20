@@ -90,6 +90,10 @@ function Test:is_x(x, a, message)
   end)
 end
 
+function Test:is_function(a, message)
+  self:is_x('function', a, message)
+end
+
 function Test:is_number(a, message)
   self:is_x('number', a, message)
 end
@@ -110,7 +114,7 @@ function Test:is_array(a, message)
   self:_assert(function()
     local nope = function()
       self.ok = false
-      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected('a ' .. x)
+      self.result:set_message(message):set_severity('fail'):set_got(a):set_expected('an array')
     end
 
     if type(a) ~= 'table' then
@@ -118,15 +122,15 @@ function Test:is_array(a, message)
       return
     end
 
-    local is_array = true
-    local i = 1
+    local numKeys = 0
     for k,v in pairs(a) do
-      if not (k == i) then
-        is_array = false
+      numKeys = numKeys + 1
+    end
+    for i=1,numKeys do
+      if a[i] == nil then
         nope()
         return
       end
-      i = i + 1
     end
   end)
 end
