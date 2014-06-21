@@ -1,6 +1,6 @@
 local core = require('core')
 
-local Transform = require('../modules/stream').Transform
+local Transform = require('stream').Transform
 
 local Runner = Transform:extend()
 

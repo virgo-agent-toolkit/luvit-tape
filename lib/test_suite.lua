@@ -1,5 +1,5 @@
 local core = require('core')
-local stream = require('../modules/stream')
+local stream = require('stream')
 local table = require('table')
 
 local Test = require('./test')
