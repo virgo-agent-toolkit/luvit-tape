@@ -1,7 +1,7 @@
 local core = require('core')
 local json = require('json')
 
-local stream = require('../modules/stream')
+local stream = require('stream')
 local Test = require('../lib/test')
 
 local JSONDumper = stream.Transform:extend()
