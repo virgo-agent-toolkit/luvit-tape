@@ -1,0 +1,26 @@
+{
+  "name": "luvit-tape",
+  "version": "0.1.0",
+  "description": "TAP Test Library and Client",
+  "main": "init.lua",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/virgo-agent-toolkit/luvit-tape.git"
+  },
+  "keywords": [
+    "luvit",
+    "test",
+    "lua"
+  ],
+  "author": "Song Gao <song@gao.io>",
+  "license": "APACHE-2",
+  "bugs": {
+    "url": "https://github.com/virgo-agent-toolkit/luvit-request/issues"
+  },
+  "homepage": "https://github.com/virgo-agent-toolkit/luvit-request",
+  "dependencies": {
+    "luvit-stream": "0.1.0"
+  }
+}
