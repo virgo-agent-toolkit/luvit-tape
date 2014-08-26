@@ -17,9 +17,9 @@
   "author": "Song Gao <song@gao.io>",
   "license": "APACHE-2",
   "bugs": {
-    "url": "https://github.com/virgo-agent-toolkit/luvit-request/issues"
+    "url": "https://github.com/virgo-agent-toolkit/luvit-tape/issues"
   },
-  "homepage": "https://github.com/virgo-agent-toolkit/luvit-request",
+  "homepage": "https://github.com/virgo-agent-toolkit/luvit-tape",
   "dependencies": {
     "luvit-stream": "0.1.0"
   }
